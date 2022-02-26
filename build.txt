@@ -1,0 +1,3 @@
+displayName = Parrying Daggers
+author = DefinitelyNotZach
+version = 0.1

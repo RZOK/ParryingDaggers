@@ -1,0 +1,18 @@
+Parrying Daggers is a mod that adds in hotkey-activated parrying, in the form of parrying daggers. 
+
+Most hostile projectiles can be parried, but a only a limited number can be reflected (most bullets/arrows/straight shot projectiles can be reflected).
+
+Reflected projectiles gain a velocity and damage boost, become friendly, and cause hit enemies to drop hearts. 
+
+Enemies themselves can be parried as well, providing brief immunity frames.
+
+There's also a number of unique interactions if you parry certain enemies. The list includes the following:
+
+-Crawltipedes (Instant kill)
+-Servants of Cthulhu and Creepers (High damage)
+-Probes (Instant kill, with a large explosion)
+-Mothron Eggs (Instant kill)
+-Tethered The Hungry (Instantly detatches)
+-Snatchers, Man Eaters, and Angry Trappers (High damage)
+
+Be sure to check your hotkey settings!
