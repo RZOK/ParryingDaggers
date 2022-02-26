@@ -15,12 +15,12 @@ namespace ParryingDaggers.Items
 		{
 			Item.width = 28;
 			Item.height = 28;
-			Item.value = Item.sellPrice(0, 10, 0, 0);
+			Item.value = Item.buyPrice(0, 20, 0, 0);
 			Item.rare = ItemRarityID.Yellow;
 		}
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(Mod, "ParryingDaggers", string.Format("Press {0} to parry enemies and reflect incoming projectiles\nYou can also reflect certain friendly projectiles to boost their velocity\nWorks in your inventory as long as it is favorited\nReflecting a hostile projectile will absorb it, healing you based on its damage instead of flying back\n'Strange martian tech containing traces of nanomachines'", ParryingDaggers.ParryHotkey.GetAssignedKeys().Count > 0 ? ParryingDaggers.ParryHotkey.GetAssignedKeys()[0] : "[Unbounded Hotkey]"));
+            TooltipLine line = new TooltipLine(Mod, "ParryingDaggers", string.Format("Press {0} to parry enemies and reflect incoming projectiles\nYou can also reflect certain friendly projectiles to boost their velocity\nWorks in your inventory as long as it is favorited\nReflecting a hostile projectile will absorb it, healing you based on its damage instead of flying back\n'Strange tech containing traces of nanomachines'", ParryingDaggers.ParryHotkey.GetAssignedKeys().Count > 0 ? ParryingDaggers.ParryHotkey.GetAssignedKeys()[0] : "[Unbounded Hotkey]"));
             tooltips.Add(line);
         }
         public override void UpdateInventory(Player player)

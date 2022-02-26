@@ -34,7 +34,7 @@ namespace ParryingDaggers
                         {
                             Swordbroken = true;
                             if (!npc.boss) npc.damage /= 2;
-                            else npc.damage = npc.damage / 3 * 2;
+                            else npc.damage /= 3 * 2;
                         }
                         break;
                 }
@@ -154,6 +154,7 @@ namespace ParryingDaggers
                 }
             }
         }
+
         public override void DrawEffects(NPC npc, ref Color drawColor)
         {
             if (Swordbroken)
@@ -161,11 +162,21 @@ namespace ParryingDaggers
                 drawColor = Color.Maroon;
             }
         }
+
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
             if (npc.type == NPCID.AngryBones)
             {
                 npcLoot.Add(ItemDropRule.NormalvsExpert(ModContent.ItemType<Swordbreaker>(), 100, 50));
+            }
+        }
+
+        public override void SetupShop(int type, Chest shop, ref int nextSlot)
+        {
+            if (type == NPCID.Cyborg)
+            {
+                shop.item[nextSlot].SetDefaults(ModContent.ItemType<HFDagger>());
+                nextSlot++;
             }
         }
     }
