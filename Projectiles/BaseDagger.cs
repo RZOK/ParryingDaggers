@@ -76,6 +76,13 @@ namespace ParryingDaggers.Projectiles
             {
                 Main.player[Projectile.owner].ClearBuff(ModContent.BuffType<Cooldown>());
                 Main.player[Projectile.owner].AddBuff(ModContent.BuffType<Cooldown>(), 59);
+                for (int f = 0; f < 30; f++)
+                {
+                    int dust = Dust.NewDust(target.position, target.width, target.height, 222, 0, 0, 0);
+                    Main.dust[dust].scale = 0.5f;
+                    Main.dust[dust].noGravity = true;
+                }
+                PlaySounds(Projectile.Center);
                 Cooldown = true;
             }
         }
@@ -180,8 +187,7 @@ namespace ParryingDaggers.Projectiles
                             velocity = dir;
                             if (reflProjectile.hostile && id != 10)
                             {
-                                SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack.WithVolume(1), Projectile.Center);
-                                SoundEngine.PlaySound(SoundID.DD2_DarkMageAttack.WithVolume(1), Projectile.Center);
+                                PlaySounds(Projectile.Center);
                                 reflProjectile.hostile = false;
                                 reflProjectile.friendly = true;
                                 switch (id)
@@ -253,16 +259,24 @@ namespace ParryingDaggers.Projectiles
                                 reflProjectile.velocity = velocity;
                                 reflProjectile.extraUpdates = extraUpdates;
                                 reflProjectile.knockBack = knockback;
-
+                                if (id != 5)
+                                {
+                                    for (int f = 0; f < 30; f++)
+                                    {
+                                        Vector2 normalizedVelocity = Vector2.Normalize(reflProjectile.velocity) * 12;
+                                        int dust = Dust.NewDust(Projectile.Center + Projectile.velocity, 1, 1, 222, normalizedVelocity.X, normalizedVelocity.Y, 0);
+                                        Main.dust[dust].scale = 0.5f;
+                                        Main.dust[dust].noGravity = true;
+                                        Main.dust[dust].velocity *= Main.rand.NextFloat(0.05f, 2f);
+                                    }
+                                }
                                 Cooldown = true;
                                 player.immune = true;
                                 player.immuneTime = 60;
                             }
-                            if (reflProjectile.friendly && (reflProjectile.aiStyle == 1 || reflProjectile.aiStyle == 16))
+                            else if (reflProjectile.friendly && (reflProjectile.aiStyle == 1 || reflProjectile.aiStyle == 16))
                             {
-                                SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack.WithVolume(1), Projectile.Center);
-                                SoundEngine.PlaySound(SoundID.DD2_DarkMageAttack.WithVolume(1), Projectile.Center);
-
+                                PlaySounds(Projectile.Center);
                                 extraUpdates += 3;
                                 velocity *= 1.25f;
                                 penetrate += 2;
@@ -287,24 +301,7 @@ namespace ParryingDaggers.Projectiles
                                         }
                                         break;
                                 }
-                                if (reflProjectile.type == 385) //sharknado bolt
-                                {
-                                    int num388 = 36;
-                                    int num9;
-                                    for (int num389 = 0; num389 < num388; num389 = num9 + 1)
-                                    {
-                                        Vector2 vector25 = Vector2.Normalize(reflProjectile.velocity) * new Vector2((float)reflProjectile.width / 2f, (float)reflProjectile.height) * 0.75f;
-                                        vector25 = vector25.RotatedBy((double)((float)(num389 - (num388 / 2 - 1)) * 6.2831855f / (float)num388), default(Vector2)) + reflProjectile.Center;
-                                        Vector2 vector26 = vector25 - reflProjectile.Center;
-                                        int num390 = Dust.NewDust(vector25 + vector26, 0, 0, 172, vector26.X * 2f, vector26.Y * 2f, 100, default(Color), 1.4f);
-                                        Main.dust[num390].noGravity = true;
-                                        Main.dust[num390].noLight = true;
-                                        Main.dust[num390].velocity = vector26;
-                                        num9 = num389;
-                                    }
-                                    reflProjectile.active = false;
-
-                                }
+                                
                                 player.ClearBuff(ModContent.BuffType<Cooldown>());
                                 player.AddBuff(ModContent.BuffType<Cooldown>(), 59);
                                 reflProjectile.GetGlobalProjectile<DaggerProjectile>().parried = true;
@@ -314,8 +311,39 @@ namespace ParryingDaggers.Projectiles
                                 reflProjectile.velocity = velocity;
                                 reflProjectile.extraUpdates = extraUpdates;
                                 reflProjectile.knockBack = knockback;
+                                int dustType = 222;
+                                if (id == 10)
+                                {
+                                    dustType = 219;
+                                }
+                                for (int f = 0; f < 30; f++)
+                                {
+                                    Vector2 normalizedVelocity = Vector2.Normalize(reflProjectile.velocity) * 12;
+                                    int dust = Dust.NewDust(Projectile.Center + Projectile.velocity, 1, 1, dustType, normalizedVelocity.X, normalizedVelocity.Y, 0);
+                                    Main.dust[dust].scale = 0.5f;
+                                    Main.dust[dust].noGravity = true;
+                                    Main.dust[dust].velocity *= Main.rand.NextFloat(0.05f, 2f);
+                                }
                                 Cooldown = true;
                             }
+                        }
+                        if (reflProjectile.type == 385) //sharknado bolt
+                        {
+                            int num388 = 36;
+                            int num9;
+                            for (int num389 = 0; num389 < num388; num389 = num9 + 1)
+                            {
+                                Vector2 vector25 = Vector2.Normalize(reflProjectile.velocity) * new Vector2((float)reflProjectile.width / 2f, (float)reflProjectile.height) * 0.75f;
+                                vector25 = vector25.RotatedBy((double)((float)(num389 - (num388 / 2 - 1)) * 6.2831855f / (float)num388), default(Vector2)) + reflProjectile.Center;
+                                Vector2 vector26 = vector25 - reflProjectile.Center;
+                                int num390 = Dust.NewDust(vector25 + vector26, 0, 0, 172, vector26.X * 2f, vector26.Y * 2f, 100, default(Color), 1.4f);
+                                Main.dust[num390].noGravity = true;
+                                Main.dust[num390].noLight = true;
+                                Main.dust[num390].velocity = vector26;
+                                num9 = num389;
+                            }
+                            reflProjectile.active = false;
+
                         }
                         else if (reflProjectile.hostile)
                         {
@@ -325,6 +353,12 @@ namespace ParryingDaggers.Projectiles
                     }
                 }
             }
+        }
+        public void PlaySounds(Vector2 pos)
+        {
+            SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack.WithVolume(1), pos);
+            SoundEngine.PlaySound(SoundID.DD2_DarkMageAttack.WithVolume(1), pos);
+            SoundEngine.PlaySound(SoundID.Item102, pos);
         }
     }
 }

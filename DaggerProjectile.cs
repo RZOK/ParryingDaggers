@@ -30,9 +30,9 @@ namespace ParryingDaggers
             {
                 if (Main.rand.NextBool(2))
                 {
-                    int d = Dust.NewDust(projectile.position, projectile.width, projectile.height, DustID.MartianSaucerSpark, -projectile.velocity.X * Main.rand.NextFloat(1), -projectile.velocity.Y * Main.rand.NextFloat(1), 255);
+                    int d = Dust.NewDust(projectile.position, projectile.width, projectile.height, 222, -projectile.velocity.X * Main.rand.NextFloat(0.5f), -projectile.velocity.Y * Main.rand.NextFloat(0.5f), 255);
                     Main.dust[d].noGravity = true;
-                    Main.dust[d].fadeIn = 1.2f;
+                    Main.dust[d].scale = 0.6f;
                 }
             }
             if (Ruler)
@@ -51,8 +51,9 @@ namespace ParryingDaggers
                 {
                     float num797 = projectile.oldVelocity.X * (5f / (float)num796);
                     float num798 = projectile.oldVelocity.Y * (5f / (float)num796);
-                    int num799 = Dust.NewDust(new Vector2(projectile.position.X - num797, projectile.position.Y - num798), projectile.width, projectile.height, DustID.MartianSaucerSpark, projectile.oldVelocity.X / 2, projectile.oldVelocity.Y / 2, 255, default(Color), 1.8f);
+                    int num799 = Dust.NewDust(new Vector2(projectile.position.X - num797, projectile.position.Y - num798), projectile.width, projectile.height, 222, projectile.oldVelocity.X / 2, projectile.oldVelocity.Y / 2, 255, default(Color));
                     Main.dust[num799].noGravity = true;
+                    Main.dust[num799].scale = 0.6f;
                     Dust dust = Main.dust[num799];
                     dust.velocity *= Main.rand.NextFloat(0.5f);
                     num4 = num796;
@@ -67,6 +68,7 @@ namespace ParryingDaggers
                     int num328 = Dust.NewDust(spinningpoint2 + vector13, 0, 0, DustID.MartianSaucerSpark, vector13.X, vector13.Y, 100, default(Color), 1.4f);
                     Main.dust[num328].noGravity = true;
                     Main.dust[num328].velocity = vector13 / 2;
+                    Main.dust[num328].scale = 0.8f;
                     num5 = num327;
                 }
             }
