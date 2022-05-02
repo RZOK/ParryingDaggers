@@ -12,12 +12,12 @@ namespace ParryingDaggers
     public class DaggerNPC : GlobalNPC
     {
         public override bool InstancePerEntity => true;
-        public override bool CloneNewInstances => true;
 
         public bool Swordbroken = false;
 
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
+            var source = projectile.GetSource_Misc("ParryingDagger");
             if (projectile.GetGlobalProjectile<DaggerProjectile>().reflected)
             {
                 crit = true;
@@ -55,13 +55,13 @@ namespace ParryingDaggers
                     case NPCID.MothronEgg:
                         damage = Main.rand.Next(140, 300);
                         crit = true;
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Heart, 1);
+                        Item.NewItem(source, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Heart, 1);
                         break;
 
                     case NPCID.TheHungry:
                         damage = Main.rand.Next(600, 900);
                         crit = true;
-                        Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Heart, 1);
+                        Item.NewItem(source, (int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemID.Heart, 1);
                         break;
 
                     case NPCID.Snatcher or NPCID.ManEater or NPCID.AngryTrapper or NPCID.FungiBulb or NPCID.GiantFungiBulb or NPCID.Clinger:
@@ -77,7 +77,7 @@ namespace ParryingDaggers
             {
                 damage = Main.rand.Next(350, 500);
                 crit = true;
-                Projectile.NewProjectile(projectile.GetProjectileSource_FromThis(), npc.Center, Vector2.Zero, ModContent.ProjectileType<ProbeExplosion>(), 200, 11, projectile.owner);
+                Projectile.NewProjectile(npc.GetSource_Death(), npc.Center, Vector2.Zero, ModContent.ProjectileType<ProbeExplosion>(), 200, 11, projectile.owner);
                 SoundEngine.PlaySound(SoundID.Item62, npc.position);
                 ref float y = ref npc.position.X;
                 y += npc.width / 2;
@@ -118,7 +118,7 @@ namespace ParryingDaggers
                     {
                         num730 = 0.8f;
                     }
-                    int num731 = Gore.NewGore(new Vector2(npc.position.X, npc.position.Y), new Vector2(Main.rand.NextFloat(-15, 16), Main.rand.NextFloat(-15, 16)), Main.rand.Next(61, 64));
+                    int num731 = Gore.NewGore(npc.GetSource_Death(), new Vector2(npc.position.X, npc.position.Y), new Vector2(Main.rand.NextFloat(-15, 16), Main.rand.NextFloat(-15, 16)), Main.rand.Next(61, 64));
                     Gore gore32 = Main.gore[num731];
                     Gore gore2 = gore32;
                     gore2.velocity *= num730;
@@ -126,7 +126,7 @@ namespace ParryingDaggers
                     y += 1f;
                     y = ref Main.gore[num731].velocity.Y;
                     y += 1f;
-                    num731 = Gore.NewGore(new Vector2(npc.position.X, npc.position.Y), new Vector2(Main.rand.NextFloat(-15, 16), Main.rand.NextFloat(-20, 21)), Main.rand.Next(61, 64), 1.5f);
+                    num731 = Gore.NewGore(npc.GetSource_Death(), new Vector2(npc.position.X, npc.position.Y), new Vector2(Main.rand.NextFloat(-15, 16), Main.rand.NextFloat(-20, 21)), Main.rand.Next(61, 64), 1.5f);
                     gore32 = Main.gore[num731];
                     gore2 = gore32;
                     gore2.velocity *= num730;
@@ -134,7 +134,7 @@ namespace ParryingDaggers
                     y -= 1f;
                     y = ref Main.gore[num731].velocity.Y;
                     y += 1f;
-                    num731 = Gore.NewGore(new Vector2(npc.position.X, npc.position.Y), new Vector2(Main.rand.NextFloat(-15, 16), Main.rand.NextFloat(-15, 16)), Main.rand.Next(61, 64), 1.25f);
+                    num731 = Gore.NewGore(npc.GetSource_Death(), new Vector2(npc.position.X, npc.position.Y), new Vector2(Main.rand.NextFloat(-15, 16), Main.rand.NextFloat(-15, 16)), Main.rand.Next(61, 64), 1.25f);
                     gore32 = Main.gore[num731];
                     gore2 = gore32;
                     gore2.velocity *= num730;
@@ -142,7 +142,7 @@ namespace ParryingDaggers
                     y += 1f;
                     y = ref Main.gore[num731].velocity.Y;
                     y -= 1f;
-                    num731 = Gore.NewGore(new Vector2(npc.position.X, npc.position.Y), new Vector2(Main.rand.NextFloat(-15, 16), Main.rand.NextFloat(-15, 16)), Main.rand.Next(61, 64));
+                    num731 = Gore.NewGore(npc.GetSource_Death(), new Vector2(npc.position.X, npc.position.Y), new Vector2(Main.rand.NextFloat(-15, 16), Main.rand.NextFloat(-15, 16)), Main.rand.Next(61, 64));
                     gore32 = Main.gore[num731];
                     gore2 = gore32;
                     gore2.velocity *= num730;

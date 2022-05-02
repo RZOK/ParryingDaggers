@@ -278,7 +278,7 @@ namespace ParryingDaggers.Projectiles
                                         extraUpdates += 3;
                                         if (reflProjectile.type == ProjectileID.Bullet)
                                         {
-                                            int explosiveProjectile = Projectile.NewProjectile(Projectile.GetProjectileSource_FromThis(), reflProjectile.Center, velocity, ProjectileID.ExplosiveBullet, (int)damage, knockback, Projectile.owner);
+                                            int explosiveProjectile = Projectile.NewProjectile(Projectile.GetSource_Misc("ParryingDagger"), reflProjectile.Center, velocity, ProjectileID.ExplosiveBullet, (int)damage, knockback, Projectile.owner);
                                             Main.projectile[explosiveProjectile].GetGlobalProjectile<DaggerProjectile>().reflectedFriendly = true;
                                             Main.projectile[explosiveProjectile].GetGlobalProjectile<DaggerProjectile>().parried = true;
                                             Main.projectile[explosiveProjectile].extraUpdates = extraUpdates;

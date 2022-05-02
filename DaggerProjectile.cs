@@ -73,10 +73,10 @@ namespace ParryingDaggers
         }
 
         public override void OnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit)
-        {
+        { 
             if (DropHeart)
             {
-                Item.NewItem((int)target.position.X, (int)target.position.Y, target.width, target.height, ItemID.Heart, 1);
+                Item.NewItem(projectile.GetSource_OnHurt(target), (int)target.position.X, (int)target.position.Y, target.width, target.height, ItemID.Heart, 1);
             }
         }
     }

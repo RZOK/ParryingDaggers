@@ -35,8 +35,8 @@ namespace ParryingDaggers.Items
         public override void AddRecipes() 
         {
             CreateRecipe()
-            .AddIngredient(RecipeGroupID.Wood, 8)
-            .AddIngredient(RecipeGroupID.IronBar, 5)
+            .AddRecipeGroup(RecipeGroupID.Wood, 8)
+            .AddRecipeGroup(RecipeGroupID.IronBar, 5)
             .AddTile(TileID.Anvils)
             .Register();
         }

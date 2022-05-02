@@ -43,7 +43,7 @@ namespace ParryingDaggers
                     Vector2 vector = Player.RotatedRelativePoint(Player.MountedCenter);
                     Vector2 vector28 = vector + Utils.RandomVector2(Main.rand, -20f, 20f);
                     Vector2 vector27 = Vector2.Normalize(new Vector2(speed.X, speed.Y)) * 14 * (0.6f + Main.rand.NextFloat() * 0.8f);
-                    Projectile.NewProjectile(Player.GetProjectileSource_Item(Dagger), Player.position, vector27, ModContent.ProjectileType<BaseDagger>(), 8, 0.5f, Player.whoAmI, 0, DaggerID);
+                    Projectile.NewProjectile(Player.GetSource_Misc("ParryingDagger"), Player.position, vector27, ModContent.ProjectileType<BaseDagger>(), 8, 0.5f, Player.whoAmI, 0, DaggerID);
                 }
             }
         }

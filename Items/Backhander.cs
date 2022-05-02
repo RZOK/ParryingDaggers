@@ -34,7 +34,7 @@ namespace ParryingDaggers.Items
             .AddRecipeGroup("AdamantiteGroup", 8)
             .AddIngredient(ItemID.SoulofNight, 8)
             .AddIngredient(ItemID.SoulofMight, 20)
-            .AddTile(TileID.Anvils)
+            .AddTile(TileID.MythrilAnvil)
             .Register();
         }
     }
