@@ -24,9 +24,7 @@ namespace ParryingDaggers
             }
             if (projectile.type == ModContent.ProjectileType<BaseDagger>() && npc.type != NPCID.TargetDummy && projectile.ai[1] != 10)
             {
-                SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack.WithVolume(1), projectile.Center);
-                SoundEngine.PlaySound(SoundID.DD2_DarkMageAttack.WithVolume(1), projectile.Center);
-
+                SoundEngine.PlaySound(new SoundStyle($"{nameof(ParryingDaggers)}/Sounds/Item/Parry"), projectile.Center);
                 switch (projectile.ai[1])
                 {
                     case 4:

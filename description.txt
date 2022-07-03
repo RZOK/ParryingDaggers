@@ -4,7 +4,7 @@ Most hostile projectiles can be parried, but a only a limited number can be refl
 
 Reflected projectiles gain a velocity and damage boost, become friendly, and cause hit enemies to drop hearts. 
 
-You can also parry specific friendly friendly projectiles if you time it right, such as bullets and arrows, to boost their velocity and tighten their spread. 
+You can also parry specific friendly projectiles if you time it right, such as bullets and arrows, to boost their velocity and tighten their spread. 
 
 Enemies themselves can be parried as well, providing brief immunity frames.
 

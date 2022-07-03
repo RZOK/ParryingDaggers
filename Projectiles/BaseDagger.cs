@@ -31,7 +31,7 @@ namespace ParryingDaggers.Projectiles
         }
 
         public bool Cooldown = false;
-
+        public int dustType = 222;
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
@@ -78,7 +78,7 @@ namespace ParryingDaggers.Projectiles
                 Main.player[Projectile.owner].AddBuff(ModContent.BuffType<Cooldown>(), 59);
                 for (int f = 0; f < 30; f++)
                 {
-                    int dust = Dust.NewDust(target.position, target.width, target.height, 222, 0, 0, 0);
+                    int dust = Dust.NewDust(target.position, target.width, target.height, dustType, 0, 0, 0);
                     Main.dust[dust].scale = 0.5f;
                     Main.dust[dust].noGravity = true;
                 }
@@ -165,6 +165,15 @@ namespace ParryingDaggers.Projectiles
         public void Parry(int id)
         {
             Rectangle hitbox = new Rectangle((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
+            switch(id)
+            {
+                case 3: //Shroomite Nanoclaw
+                    dustType = DustID.FireworkFountain_Blue;
+                    break;
+                case 10: //Backhander
+                    dustType = DustID.FireworkFountain_Red;
+                    break;
+            }
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile reflProjectile = Main.projectile[i];
@@ -177,22 +186,22 @@ namespace ParryingDaggers.Projectiles
                         {
                             float damage = reflProjectile.damage;
                             int penetrate = reflProjectile.penetrate;
-                            Vector2 velocity = -reflProjectile.velocity;
                             int extraUpdates = reflProjectile.extraUpdates;
                             float knockback = reflProjectile.knockBack;
 
                             Vector2 dir = Main.MouseWorld - reflProjectile.position;
                             dir.Normalize();
                             dir *= (Math.Abs(reflProjectile.velocity.X) + Math.Abs(reflProjectile.velocity.Y));
-                            velocity = dir;
+                            Vector2 velocity = dir;
                             if (reflProjectile.hostile && id != 10)
                             {
+                                player.GetModPlayer<DaggerPlayer>().screenShake = 10;
                                 PlaySounds(Projectile.Center);
                                 reflProjectile.hostile = false;
                                 reflProjectile.friendly = true;
                                 switch (id)
                                 {
-                                    case 2:
+                                    case 2: //Parrying Ruler
                                         damage *= 5;
                                         if (penetrate != -1) penetrate += 5;
                                         velocity *= 1.5f;
@@ -202,19 +211,20 @@ namespace ParryingDaggers.Projectiles
                                         reflProjectile.GetGlobalProjectile<DaggerProjectile>().Ruler = true;
                                         break;
 
-                                    case 3:
+                                    case 3: //Shroomite Nanoclaw
                                         damage *= 5.5f;
-                                        if (penetrate != -1) penetrate += 10;
                                         velocity *= 1.5f;
-                                        extraUpdates += 10;
                                         knockback *= 2;
-                                        reflProjectile.GetGlobalProjectile<DaggerProjectile>().DropHeart = true;
+                                        int p = Projectile.NewProjectile(Projectile.GetSource_FromAI(), reflProjectile.position, velocity, ModContent.ProjectileType<NanoclawBeam>(), (int)damage, knockback, Main.myPlayer);
+                                        Main.projectile[p].GetGlobalProjectile<DaggerProjectile>().DropHeart = true;
+                                        player.GetModPlayer<DaggerPlayer>().screenShake = 15;
+                                        reflProjectile.active = false;
                                         break;
 
-                                    case 5:
+                                    case 5: //HF Parrying Dagger
                                         player.statLife += reflProjectile.damage / 2;
                                         player.HealEffect(reflProjectile.damage / 2);
-                                        for (int d = 0; d < 50; d++)
+                                        for (int d = 0; d < 10; d++)
                                         {
                                             float num797 = reflProjectile.oldVelocity.X * (5f / (d / 2));
                                             float num798 = reflProjectile.oldVelocity.Y * (5f / (d / 2));
@@ -226,17 +236,19 @@ namespace ParryingDaggers.Projectiles
                                             dust = Main.dust[num799];
                                             dust.velocity *= 0.05f;
                                             Main.dust[num799].noGravity = true;
-
-                                            int num5 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 92, 0f, 0f, 200, default(Color), 0.5f);
-                                            Main.dust[num5].noGravity = true;
-                                            Main.dust[num5].scale = 1.3f;
-                                            Vector2 vector = new Vector2((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
-                                            vector.Normalize();
-                                            vector *= (float)Main.rand.Next(50, 100) * 0.08f;
-                                            Main.dust[num5].velocity = vector;
-                                            vector.Normalize();
-                                            vector *= 50f;
-                                            Main.dust[num5].position = Projectile.Center - vector;
+                                            for (int f = 0; f < 2; f++)
+                                            {
+                                                int num5 = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 92, 0f, 0f, 200, default(Color), 0.5f);
+                                                Main.dust[num5].noGravity = true;
+                                                Main.dust[num5].scale = 1.3f;
+                                                Vector2 vector = new Vector2((float)Main.rand.Next(-100, 101), (float)Main.rand.Next(-100, 101));
+                                                vector.Normalize();
+                                                vector *= (float)Main.rand.Next(50, 100) * 0.08f;
+                                                Main.dust[num5].velocity = vector;
+                                                vector.Normalize();
+                                                vector *= 50f;
+                                                Main.dust[num5].position = Projectile.Center - vector;
+                                            }
                                         }
                                         reflProjectile.active = false;
                                         break;
@@ -259,22 +271,31 @@ namespace ParryingDaggers.Projectiles
                                 reflProjectile.velocity = velocity;
                                 reflProjectile.extraUpdates = extraUpdates;
                                 reflProjectile.knockBack = knockback;
+                                reflProjectile.usesLocalNPCImmunity = true;
+                                reflProjectile.localNPCHitCooldown = -1;
                                 if (id != 5)
                                 {
                                     for (int f = 0; f < 30; f++)
                                     {
+                                        float scale = 0.5f;
+                                        float vel = Main.rand.NextFloat(0.05f, 2f);
+                                        if (f % 5 == 0)
+                                        {
+                                            scale = 1.2f;
+                                            vel *= 1.2f;
+                                        }
                                         Vector2 normalizedVelocity = Vector2.Normalize(reflProjectile.velocity) * 12;
-                                        int dust = Dust.NewDust(Projectile.Center + Projectile.velocity, 1, 1, 222, normalizedVelocity.X, normalizedVelocity.Y, 0);
-                                        Main.dust[dust].scale = 0.5f;
+                                        int dust = Dust.NewDust(Projectile.Center + Projectile.velocity, 1, 1, dustType, normalizedVelocity.X, normalizedVelocity.Y, 0);
+                                        Main.dust[dust].scale = scale;
                                         Main.dust[dust].noGravity = true;
-                                        Main.dust[dust].velocity *= Main.rand.NextFloat(0.05f, 2f);
+                                        Main.dust[dust].velocity *= vel;
                                     }
                                 }
                                 Cooldown = true;
                                 player.immune = true;
                                 player.immuneTime = 60;
                             }
-                            else if (reflProjectile.friendly && (reflProjectile.aiStyle == 1 || reflProjectile.aiStyle == 16))
+                            else if (reflProjectile.friendly && (reflProjectile.aiStyle == 1 || reflProjectile.aiStyle == 16) && Projectile.type != ModContent.ProjectileType<NanoclawBeam>())
                             {
                                 PlaySounds(Projectile.Center);
                                 extraUpdates += 3;
@@ -311,18 +332,21 @@ namespace ParryingDaggers.Projectiles
                                 reflProjectile.velocity = velocity;
                                 reflProjectile.extraUpdates = extraUpdates;
                                 reflProjectile.knockBack = knockback;
-                                int dustType = 222;
-                                if (id == 10)
-                                {
-                                    dustType = 219;
-                                }
+                                player.GetModPlayer<DaggerPlayer>().screenShake = 10;
                                 for (int f = 0; f < 30; f++)
                                 {
+                                    float scale = 0.5f;
+                                    float vel = Main.rand.NextFloat(0.05f, 2f);
+                                    if (f % 5 == 0)
+                                    {
+                                        scale = 1.2f;
+                                        vel *= 1.2f;
+                                    }
                                     Vector2 normalizedVelocity = Vector2.Normalize(reflProjectile.velocity) * 12;
                                     int dust = Dust.NewDust(Projectile.Center + Projectile.velocity, 1, 1, dustType, normalizedVelocity.X, normalizedVelocity.Y, 0);
-                                    Main.dust[dust].scale = 0.5f;
+                                    Main.dust[dust].scale = scale;
                                     Main.dust[dust].noGravity = true;
-                                    Main.dust[dust].velocity *= Main.rand.NextFloat(0.05f, 2f);
+                                    Main.dust[dust].velocity *= vel;
                                 }
                                 Cooldown = true;
                             }
@@ -356,9 +380,7 @@ namespace ParryingDaggers.Projectiles
         }
         public void PlaySounds(Vector2 pos)
         {
-            SoundEngine.PlaySound(SoundID.DD2_JavelinThrowersAttack.WithVolume(1), pos);
-            SoundEngine.PlaySound(SoundID.DD2_DarkMageAttack.WithVolume(1), pos);
-            SoundEngine.PlaySound(SoundID.Item102, pos);
+            SoundEngine.PlaySound(new SoundStyle($"{nameof(ParryingDaggers)}/Sounds/Item/Parry"), Projectile.Center);
         }
     }
 }
